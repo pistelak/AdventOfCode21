@@ -3,6 +3,8 @@ defmodule AdventOfCode do
     File.read!(file_name)
     |> String.split("\n")
     |> Enum.map(&String.to_integer/1)
+    |> Enum.chunk_every(3, 1, :discard)
+    |> Enum.map(&Enum.sum/1)
     |> AdventOfCode.compute(0)
   end
 
