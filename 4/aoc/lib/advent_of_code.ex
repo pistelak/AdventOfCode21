@@ -20,27 +20,32 @@ defmodule AdventOfCode do
 
   end
 
-  @doc """
-   iex>[[
-   ...> [14, 21, 17, 24,  4],
-   ...> [10, 16, 15,  9, 19],
-   ...> [18,  8, 23, 26, 20],
-   ...> [22, 11, 13,  6,  5],
-   ...> [ 2,  0, 12,  3,  7]
-   ...>]] |> AdventOfCode.evaluate([], [7, 4, 9, 5, 11, 17, 23, 2, 0 , 14, 21, 24])
-   4512
-  """
+  def evaluate([last_board | []], played_numbers, [drawn | numbers_to_play]) do
+
+    played_numbers = played_numbers ++ [drawn]
+
+    bingo = last_board
+      |> mark_numbers(played_numbers)
+      |> bingo_on_board?
+
+    if bingo,
+    do: last_board |> mark_numbers(played_numbers) |> sum_of_all_unmarked_numbers |> then(&(&1 * drawn)),
+    else: evaluate([last_board], played_numbers, numbers_to_play)
+
+  end
+
   def evaluate(boards, played_numbers, [drawn | numbers_to_play]) do
 
     played_numbers = played_numbers ++ [drawn]
 
-    bingo = boards
-      |> Enum.find(& &1 |> mark_numbers(played_numbers) |> bingo_on_board?)
+    boards
+      |> Enum.reject(&(&1 |> mark_numbers(played_numbers) |> bingo_on_board?))
+      |> evaluate(played_numbers, numbers_to_play)
 
-    if bingo != nil,
-    do: bingo |> mark_numbers(played_numbers) |> sum_of_all_unmarked_numbers |> then(&(&1 * drawn)),
-    else: evaluate(boards, played_numbers, numbers_to_play)
+  end
 
+  def evaluate(_, _, []) do
+    {:false}
   end
 
   @doc """
