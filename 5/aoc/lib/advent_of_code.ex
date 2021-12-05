@@ -20,7 +20,7 @@ defmodule AdventOfCode do
   ...> "0,0 -> 8,8",
   ...> "5,5 -> 8,2"
   ...> ] |> AdventOfCode.process_lines
-  5
+  12
   """
   def process_lines(lines) do
 
@@ -37,8 +37,8 @@ defmodule AdventOfCode do
   [[0, 9], [0, 8], [0, 7], [0, 6], [0, 5], [0, 4], [0, 3], [0, 2]]
   iex> [[0, 2], [5, 2]] |> AdventOfCode.generate_line
   [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2]]
-  iex> [[0, 2], [5, 3]] |> AdventOfCode.generate_line
-  []
+  iex> [[0, 0], [3, 3]] |> AdventOfCode.generate_line
+  [[0, 0], [1, 1], [2, 2], [3, 3]]
   """
   def generate_line([[x1, y], [x2, y]]) do
     x1..x2 |> Enum.to_list |> Enum.map(&([&1, y]))
@@ -48,8 +48,12 @@ defmodule AdventOfCode do
     y1..y2 |> Enum.to_list |> Enum.map(&([x, &1]))
   end
 
-  def generate_line(_) do
-    []
+  def generate_line([[x1, y1], [x2, y2]]) do
+    x_coords = x1..x2 |> Enum.to_list
+    y_coords = y1..y2 |> Enum.to_list
+
+    Enum.zip(x_coords, y_coords)
+      |> Enum.map(&Tuple.to_list/1)
   end
 
   @doc """
